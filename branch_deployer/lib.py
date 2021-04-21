@@ -10,3 +10,12 @@ def update_repo(repository):
     else:
         with pushd(repository.local_git_directory):
             git.fetch('origin')
+
+def get_all_branches_in_repo(repository):
+    branches = []
+    with pushd(repository.local_git_directory):
+        for branch in git.branch():
+            branch = branch[2:].strip()
+            if branch:
+                branches.append(branch)
+    return branches

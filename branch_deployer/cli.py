@@ -32,7 +32,11 @@ def main():
     elif args.subparser_name == "process":
 
         for repository in settings.REPOSITORIES:
+            print("------ REPOSITORY " + repository.url)
             branch_deployer.lib.update_repo(repository)
+            for branch_name in branch_deployer.lib.get_all_branches_in_repo(repository):
+                if repository.should_deploy_branch(branch_name):
+                    print("Will Deploy branch " + branch_name)
 
 
 if __name__ == "__main__":

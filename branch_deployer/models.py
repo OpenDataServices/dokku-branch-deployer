@@ -11,5 +11,9 @@ class RepositoryModel:
         self.id = settings_data['id']
         self.clone_url = self.url + ".git"
         self.local_git_directory = os.path.join(settings.REPOS_BASE_PATH, "github", url_bits[3], url_bits[4])
+        self.branches = settings_data.get('branches',[])
 
-
+    def should_deploy_branch(self, branch_name):
+        if branch_name in self.branches:
+            return True
+        return False
