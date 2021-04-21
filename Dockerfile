@@ -20,6 +20,6 @@ CMD ["bin/run-prod"]
 COPY ./requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY ./bin ./bin
-COPY ./webhook_deploy ./webhook_deploy
+COPY ./branch_deployer ./branch_deployer
 
 USER dokku
