@@ -2,6 +2,8 @@ from sh import pushd, ssh, ErrorReturnCode
 from sh.contrib import git
 import os
 from branch_deployer import settings
+from datetime import datetime
+from textwrap import dedent
 
 SSH_CONNECT_STRING = f'{settings.SSH_DOKKU_USER}@{settings.SSH_DOKKU_HOST}'
 dokku = ssh.bake('-tp', settings.SSH_DOKKU_PORT, SSH_CONNECT_STRING, '--')
@@ -33,4 +35,28 @@ def app_create(repository, branch_name):
         # app already exists
         # TODO can we not do better than this?
         pass
+
+
+def push_repo(repository, branch_name):
+    app_name = repository.app_name_for_branch(branch_name)
+    dokku_host = f'{SSH_CONNECT_STRING}:{settings.SSH_DOKKU_PORT}'
+    if not settings.DEPLOY_LOGS_BASE_PATH.exists():
+        settings.DEPLOY_LOGS_BASE_PATH.mkdir()
+
+    deploy_log_file = settings.DEPLOY_LOGS_BASE_PATH / f'{repository.id}.txt'
+    with deploy_log_file.open('wb') as dlfo:
+        dlfo.write(dedent(f"""\
+            =====================================================
+            Deployment:  {datetime.utcnow().isoformat()}
+            Repository:  {repository.url}
+            Branch name: {branch_name}
+            App name:    {app_name}
+            =====================================================
+        """).encode('utf-8'))
+        with pushd(repository.local_git_directory):
+            git.push('--force',
+                     f'ssh://{dokku_host}/{app_name}',
+                     f'{branch_name}:refs/heads/master',
+                     _err_to_out=True,
+                     _out=dlfo)
 
