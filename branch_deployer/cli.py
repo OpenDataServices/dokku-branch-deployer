@@ -37,6 +37,7 @@ def main():
             for branch_name in branch_deployer.lib.get_all_branches_in_repo(repository):
                 if repository.should_deploy_branch(branch_name):
                     print("Will Deploy branch " + branch_name)
+                    branch_deployer.lib.app_create(repository, branch_name)
 
 
 if __name__ == "__main__":

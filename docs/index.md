@@ -46,10 +46,11 @@ be a good start.
 The app will store some things on the Dokku host: ssh keys, deployment logs, and the bare git repos.
 
 ```shell
-$ mkdir -p /var/lib/dokku/data/storage/$APP_NAME/{ssh,deploy-logs,repos}
+$ mkdir -p /var/lib/dokku/data/storage/$APP_NAME/{ssh,deploy-logs,repos,settings}
 $ dokku storage:mount $APP_NAME /var/lib/dokku/data/storage/$APP_NAME/ssh:/home/dokku/.ssh
 $ dokku storage:mount $APP_NAME /var/lib/dokku/data/storage/$APP_NAME/deploy-logs:/app/deploy-logs
 $ dokku storage:mount $APP_NAME /var/lib/dokku/data/storage/$APP_NAME/repos:/app/repos
+$ dokku storage:mount $APP_NAME /var/lib/dokku/data/storage/$APP_NAME/settings:/app/settings
 ```
 
 ## 5. Setup the build arguments
@@ -70,13 +71,13 @@ Make sure you create it with an empty passphrase.
 
 ```shell
 $ pushd /var/lib/dokku/data/storage/$APP_NAME/ssh
-$ ssh-keygen -t rsa -b 4096 -C "webhook-deploy-app" -f ./id_rsa
+$ ssh-keygen -t rsa -b 4096 -C "dokku-branch-deployer" -f ./id_rsa
 ```
 
 Then you can add it to your Dokku users:
 
 ```shell
-$ sudo dokku ssh-keys:add webhook-deploy-app ./id_rsa.pub
+$ sudo dokku ssh-keys:add dokku-branch-deployer ./id_rsa.pub
 ```
 
 > Note: You may have to do this one as root. Run it via `sudo` from an account with permission to do that.

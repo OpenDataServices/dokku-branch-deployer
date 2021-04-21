@@ -1,6 +1,8 @@
 
 from branch_deployer import settings
 import os
+from slugify import slugify
+
 
 class RepositoryModel:
     def __init__(self, settings_data):
@@ -17,3 +19,11 @@ class RepositoryModel:
         if branch_name in self.branches:
             return True
         return False
+
+    def app_name_for_branch(self, branch_name):
+        url_bits = self.url.split('/')
+        app_name = '{repo_name}-{branch_name}'.format(
+            repo_name=url_bits[4],
+            branch_name=branch_name,
+        )
+        return slugify(app_name)
