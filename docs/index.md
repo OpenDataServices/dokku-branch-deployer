@@ -97,7 +97,7 @@ $ dokku letsencrypt $APP_NAME
 Navigate to your repo's webhook settings (URL below) and enter the following for the web:
 
 * URL: `https://github.com/<your-user-or-org>/<your-repo>/settings/hooks/new`
-* Payload URL: `https://deployer.<your-dokku-server-domain>/hooks/`
+* Payload URL: `https://deployer.<your-dokku-server-domain>/hooks/github`
 * Content Type: `application/json`
 * Secret: The secret you set in your app config from step 3
 * Which events would you like to trigger this webhook?: `Just the push event`

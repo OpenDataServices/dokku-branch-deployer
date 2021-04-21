@@ -12,10 +12,11 @@ def update_repo(repository):
     if not os.path.exists(repository.local_git_directory):
         os.makedirs(repository.local_git_directory)
         with pushd(repository.local_git_directory):
-            git.clone(repository.clone_url, '.', bare=True)
+            git.clone(repository.clone_url, '.', mirror=True)
     else:
         with pushd(repository.local_git_directory):
-            git.fetch('origin')
+            git.remote('update')
+            git.fetch('--prune')
 
 def get_all_branches_in_repo(repository):
     branches = []
@@ -60,3 +61,19 @@ def push_repo(repository, branch_name):
                      _err_to_out=True,
                      _out=dlfo)
 
+
+
+def get_branch_name(ref):
+    """
+    Take a full git ref name and return a more simple branch name.
+    e.g. `refs/heads/demo/dude` -> `demo/dude`
+
+    :param ref: the git head ref sent by GitHub
+    :return: str the simple branch name
+    """
+    refs_prefix = 'refs/heads/'
+    if ref.startswith(refs_prefix):
+        # ref is in the form "refs/heads/master"
+        ref = ref[len(refs_prefix):]
+
+    return ref

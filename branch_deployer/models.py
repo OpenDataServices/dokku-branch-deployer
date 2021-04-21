@@ -27,3 +27,7 @@ class RepositoryModel:
             branch_name=branch_name,
         )
         return slugify(app_name)
+
+    def matches_github_webhook_data(self, data):
+        url_bits = self.url.split('/')
+        return url_bits[3] == data.get('repository',{}).get('owner',{}).get('login') and url_bits[4] == data.get('repository',{}).get('name')
