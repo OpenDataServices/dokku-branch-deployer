@@ -1,5 +1,6 @@
-repos/
-deploy-logs/
+/repos/
+/deploy-logs/
+/settings/
 sample_push_data.py
 
 # Byte-compiled / optimized / DLL files
