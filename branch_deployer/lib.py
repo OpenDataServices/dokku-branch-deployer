@@ -38,6 +38,10 @@ def app_create(repository, branch_name):
         pass
 
 
+def apps_destroy(repository, branch_name):
+    dokku('apps:destroy', repository.app_name_for_branch(branch_name), force=True)
+
+
 def push_repo(repository, branch_name):
     app_name = repository.app_name_for_branch(branch_name)
     dokku_host = f'{SSH_CONNECT_STRING}:{settings.SSH_DOKKU_PORT}'
