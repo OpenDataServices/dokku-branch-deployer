@@ -73,7 +73,7 @@ $ sudo dokku ssh-keys:add dokku-branch-deployer ./id_rsa.pub
 From your machine:
 
 ```shell
-$ git clone https://github.com/pmac/dokku-webhook-deploy
+$ git clone https://github.com/OpenDataServices/dokku-branch-deployer.git
 ```
 
 Push this to the Dokku app you previously created.
