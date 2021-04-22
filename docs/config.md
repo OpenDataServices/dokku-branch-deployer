@@ -34,9 +34,11 @@ These have to be set in the settings file. Eg:
 ```yaml
 repositories:                                                           
   - id: test-dokku-jekyll                                               
-    url: https://github.com/OpenDataServices/test-dokku-jekyll          
+    url: https://github.com/OpenDataServices/test-dokku-jekyll
+    app_name_format: {repo_name}-{branch_name}
+    all_branches: false         
     branches:                                                           
-        - main   
+        - main
 ```
 
 ### id
@@ -46,6 +48,22 @@ Each repository should have an unique Id
 ### url
 
 This should be the URL of the GitHub repository. Currently only GitHub is supported.
+
+### app_name_format
+
+The app name for each branch is set by this format.
+
+The following variables can be used:
+
+* `{repo_owner}` - Repo owner. eg for https://github.com/OpenDataServices/dokku-branch-deployer this is `OpenDataServices`
+* `{repo_name}` - Repo name. eg for https://github.com/OpenDataServices/dokku-branch-deployer this is `dokku-branch-deployer`
+* `{branch_name}` - Branch name
+
+### all_branches
+
+If set, every branch of this repo will be deployed. 
+
+If not set, only specific branches will deployed and further settings are needed to configure that.
 
 ### branches
 

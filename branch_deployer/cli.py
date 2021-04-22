@@ -28,6 +28,11 @@ def main():
             print("url = " + repository.url)
             print("Clone URL = " + repository.clone_url)
             print("Local Git Dir = " + repository.local_git_directory)
+            print("App Name Format = " + repository.app_name_format)
+            print("All branches = " + ("Yes" if repository.all_branches else "No"))
+            if not repository.all_branches and repository.branches:
+                print("Branches = ")
+                [print("- " + b) for b in repository.branches]
 
     elif args.subparser_name == "process":
 

@@ -14,15 +14,20 @@ class RepositoryModel:
         self.clone_url = self.url + ".git"
         self.local_git_directory = os.path.join(settings.REPOS_BASE_PATH, "github", url_bits[3], url_bits[4])
         self.branches = settings_data.get('branches',[])
+        self.all_branches = settings_data.get('all_branches',[])
+        self.app_name_format = settings_data.get('app_name_format', '{repo_name}-{branch_name}')
 
     def should_deploy_branch(self, branch_name):
+        if self.all_branches:
+            return True
         if branch_name in self.branches:
             return True
         return False
 
     def app_name_for_branch(self, branch_name):
         url_bits = self.url.split('/')
-        app_name = '{repo_name}-{branch_name}'.format(
+        app_name = self.app_name_format.format(
+            repo_owner=url_bits[3],
             repo_name=url_bits[4],
             branch_name=branch_name,
         )
