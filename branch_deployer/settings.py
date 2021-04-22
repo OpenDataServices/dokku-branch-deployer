@@ -28,7 +28,7 @@ REPOS_BASE_PATH = BASE_PATH / 'repos'
 DEPLOY_LOGS_BASE_PATH = BASE_PATH / 'deploy-logs'
 SETTINGS_BASE_PATH = BASE_PATH / 'settings'
 
-# These settings can come from env or file
+# These settings can in theory come from env or file
 GITHUB_SECRET = config('GITHUB_SECRET', raise_error=False)
 REPOSITORIES = []
 LOG_LEVEL = config('LOG_LEVEL', default='INFO')

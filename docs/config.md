@@ -1,16 +1,12 @@
 # All Configuration Options
 
-Configuration should be set in environment variables, but can also be set in a `.env` file in the project root (mostly for development use).
+Configuration is done by a mix of environment variables and a settings file.
 
-## LOG_LEVEL
+Some config options must be set in environment variables, as they are used in several different places.  Most settings can in theory be set in either place.
 
-Can be the usual things (e.g. 'DEBUG', 'INFO', etc.). Default is 'INFO'.
+A settings file must be placed in `/app/settings/settings.yaml` inside the container. If you follow the setup instructions in the docs, that means at `/var/lib/dokku/data/storage/$APP_NAME/settings/settings.yaml` on your host.
 
-## GITHUB_SECRET
-
-When you create your webhook in your GitHub repo settings, you have the option of setting a secret. It's highly recommended that you set this. If you do, github will use that secret to calculate an HMAC signature of the POST data using SHA1 and [send it with the POST in a header](https://developer.github.com/webhooks/#delivery-headers). Set the same secret in this variable to have the app calculate the same HMAC signature and verify that they match. In this way we can verify that this POST request did indeed come from a service that has this secret, which hopefully means only Github.
-
-## SSH_DOKKU_*
+## SSH_DOKKU_* environment variables
 
 The connection information for your Dokku server via SSH. The only required one is `SSH_DOKKU_HOST` which has no default
 and nothing else really works without it. The others have useful defaults:
@@ -21,61 +17,38 @@ SSH_DOKKU_USER=dokku # default
 SSH_DOKKU_PORT=22 # default
 ```
 
-## APPS_DOKKU_DOMAIN
+## LOG_LEVEL environment variable
 
-This defaults to `SSH_DOKKU_HOST` but if you have another domain you use for public access to the apps then you can define it here.
+Can be the usual things (e.g. 'DEBUG', 'INFO', etc.). Default is 'INFO'.
 
-## APPS_LETSENCRYPT
+## GITHUB_SECRET environment variable
 
-This is a boolean and tells the system whether or not to setup a Let's Encrypt cert for the newly created apps using the Let's Encrypt Dokku plugin.
+When you create your webhook in your GitHub repo settings, you have the option of setting a secret. It's highly recommended that you set this. If you do, github will use that secret to calculate an HMAC signature of the POST data using SHA1 and [send it with the POST in a header](https://developer.github.com/webhooks/#delivery-headers). Set the same secret in this variable to have the app calculate the same HMAC signature and verify that they match. In this way we can verify that this POST request did indeed come from a service that has this secret, which hopefully means only Github.
 
-## DEMO_BRANCH_PREFIX 
+## Repositories
 
-This determines which branches will be deployed as demos (or review apps). The default is `demo/`, but you can set it to be anything else with this setting.
+The app needs to know a list of repostories it should process. It will only process these apps.
 
-## DEFAULT_DEPLOY_BRANCHES
+These have to be set in the settings file. Eg:
 
-If you'd like for the system to deploy any other branches that don't match the demo prefix above, you can set them here. This should be a comma separated list of branch names. The default is an empty list.
-
-```dotenv
-DEFAULT_DEPLOY_BRANCHES=master,stage,prod
+```yaml
+repositories:                                                           
+  - id: test-dokku-jekyll                                               
+    url: https://github.com/OpenDataServices/test-dokku-jekyll          
+    branches:                                                           
+        - main   
 ```
 
-You can alternatively override this setting on a per-repo basis if you have more than one repo setup to use your instance for deployments. The repo-specific version uses the owner and repo names in the environment variable. For example:
+### id
 
-```dotenv
-# repo name: pmac/dokku-webhook-deploy
-PMAC_DOKKU_WEBHOOK_DEPLOY_BRANCHES=master,prod
-```
+Each repository should have an unique Id
 
-If a matching config name is found it will be used, otherwise it will fall back to the default list above. The default for both is an empty list which means no non-demo deployments will happen.
+### url
 
-## APP_NAME_TEMPLATE
+This should be the URL of the GitHub repository. Currently only GitHub is supported.
 
-You can customize the names of the created apps if you wish. The default is:
+### branches
 
-```dotenv
-APP_NAME_TEMPLATE={repo_name}-{branch_name}
-```
+This should be a list of branch names to deploy
 
-The format should be that of the [Python str.format()](https://docs.python.org/3/library/string.html#formatstrings) function, and
-the available variables are:
 
-* `repo_name`: Name of the repository without the owner prefix (e.g. `dokku-webhook-deploy`)
-* `repo_full_name`: Name of the repository with the owner prefix (e.g. `pmac/dokku-webhook-deploy`)
-* `branch_name`: Full name of the branch (e.g. `master` or `demo/feature`)
-
-All of those strings will be [slugified](https://github.com/un33k/python-slugify#how-to-use) for use in the name, which mostly means all non-alpha-numerics become dashes.
-
-## SLACK_*
-
-If you set these variables updates about your deployments will be sent to the slack team and channel of your choice.
-
-```dotenv
-SLACK_API_TOKEN=<the token from slack>
-SLACK_CHANNEL=#my-deployments
-```
-
-See the [following page](https://api.slack.com/custom-integrations/legacy-tokens) for how to get your token.
-
-> Note: Yes, this is an old way of doing Slack and the plan is to upgrade. For now this works.
