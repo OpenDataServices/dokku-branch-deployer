@@ -2,3 +2,4 @@
 
 * [install](install.md)
 * [config](config.md)
+* [cli](cli.md)
