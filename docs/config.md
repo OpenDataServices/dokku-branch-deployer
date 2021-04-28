@@ -77,12 +77,14 @@ This should be a list of branch names to deploy
 
 ### setup_dokku_commands & teardown_dokku_commands
 
-In some cases, there may be other things you need to do to setup or teardown the app here, such as
+In some cases, there may be other things you need to do to setup or teardown the app here, such as:
 
 * Attach databases
 * Enable lets encrypt
 * Set a basic auth password so dev sites can't be seen be everyone
 
 You can do the commands to do so here.
+
+These can only be dokku commands.
 
 The special token `$APP_NAME` will be replaced with the name of the app for that branch.
