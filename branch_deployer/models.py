@@ -16,6 +16,8 @@ class RepositoryModel:
         self.branches = settings_data.get('branches',[])
         self.all_branches = settings_data.get('all_branches',[])
         self.app_name_format = settings_data.get('app_name_format', '{repo_name}-{branch_name}')
+        self.setup_dokku_commands = settings_data.get('setup_dokku_commands',[])
+        self.teardown_dokku_commands = settings_data.get('teardown_dokku_commands',[])
 
     def should_deploy_branch(self, branch_name):
         if self.all_branches:

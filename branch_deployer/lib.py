@@ -4,9 +4,18 @@ import os
 from branch_deployer import settings
 from datetime import datetime
 from textwrap import dedent
+import shlex
 
 SSH_CONNECT_STRING = f'{settings.SSH_DOKKU_USER}@{settings.SSH_DOKKU_HOST}'
 dokku = ssh.bake('-tp', settings.SSH_DOKKU_PORT, SSH_CONNECT_STRING, '--')
+
+def _run_dokku_command_from_string(cmd):
+    bits = shlex.split(cmd)
+    first_bit = bits.pop(0)
+    if first_bit != 'dokku':
+        raise Exception("We can only run dokku commands")
+    dokku(*bits)
+
 
 def update_repo(repository):
     if not os.path.exists(repository.local_git_directory):
@@ -29,8 +38,11 @@ def get_all_branches_in_repo(repository):
 
 
 def app_create(repository, branch_name):
+    app_name = repository.app_name_for_branch(branch_name)
     try:
-        dokku('apps:create', repository.app_name_for_branch(branch_name))
+        dokku('apps:create', app_name)
+        for cmd in repository.setup_dokku_commands:
+            _run_dokku_command_from_string(cmd.replace('$APP_NAME', app_name))
     except ErrorReturnCode as e:
         #print(str(e))
         # app already exists
@@ -38,8 +50,12 @@ def app_create(repository, branch_name):
         pass
 
 
+
 def apps_destroy(repository, branch_name):
-    dokku('apps:destroy', repository.app_name_for_branch(branch_name), force=True)
+    app_name = repository.app_name_for_branch(branch_name)
+    for cmd in repository.teardown_dokku_commands:
+        _run_dokku_command_from_string(cmd.replace('$APP_NAME', app_name))
+    dokku('apps:destroy', app_name, force=True)
 
 
 def push_repo(repository, branch_name):

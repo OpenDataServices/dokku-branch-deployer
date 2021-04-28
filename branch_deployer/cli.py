@@ -33,6 +33,12 @@ def main():
             if not repository.all_branches and repository.branches:
                 print("Branches = ")
                 [print("- " + b) for b in repository.branches]
+            if repository.setup_dokku_commands:
+                print("Setup Commands = ")
+                [print("- " + b) for b in repository.setup_dokku_commands]
+            if repository.teardown_dokku_commands:
+                print("Leave Commands = ")
+                [print("- " + b) for b in repository.teardown_dokku_commands]
 
     elif args.subparser_name == "process":
 

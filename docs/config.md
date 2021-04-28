@@ -39,6 +39,12 @@ repositories:
     all_branches: false         
     branches:                                                           
         - main
+    setup_dokku_commands:
+      - dokku postgres:create pg-$APP_NAME
+      - dokku postgres:link pg-$APP_NAME $APP_NAME
+    teardown_dokku_commands:
+      - dokku postgres:unlink pg-$APP_NAME $APP_NAME
+      - dokku postgres:destroy pg-$APP_NAME -f
 ```
 
 ### id
@@ -69,4 +75,14 @@ If not set, only specific branches will deployed and further settings are needed
 
 This should be a list of branch names to deploy
 
+### setup_dokku_commands & teardown_dokku_commands
 
+In some cases, there may be other things you need to do to setup or teardown the app here, such as
+
+* Attach databases
+* Enable lets encrypt
+* Set a basic auth password so dev sites can't be seen be everyone
+
+You can do the commands to do so here.
+
+The special token `$APP_NAME` will be replaced with the name of the app for that branch.
