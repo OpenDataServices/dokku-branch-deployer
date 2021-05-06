@@ -60,10 +60,11 @@ def handle_push(data):
     for repository in settings.REPOSITORIES:
         if repository.matches_github_webhook_data(data):
             branch_name = branch_deployer.lib.get_branch_name(data['ref'])
-            if data['deleted']:
-                branch_deployer.lib.apps_destroy(repository, branch_name)
-            else:
-                branch_deployer.lib.update_repo(repository)
-                branch_deployer.lib.app_create(repository, branch_name)
-                branch_deployer.lib.push_repo(repository, branch_name)
+            if repository.should_deploy_branch(branch_name):
+                if data['deleted']:
+                    branch_deployer.lib.apps_destroy(repository, branch_name)
+                else:
+                    branch_deployer.lib.update_repo(repository)
+                    branch_deployer.lib.app_create(repository, branch_name)
+                    branch_deployer.lib.push_repo(repository, branch_name)
 
