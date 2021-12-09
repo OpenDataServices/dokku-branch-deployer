@@ -1,0 +1,25 @@
+name: Test
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Test with what ever version is in Dockerfile (current) and anything newer (for the future)
+        python-version: [ '3.8', '3.9','3.10']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: x64
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements_dev.txt') }}-${{ matrix.python-version }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - run: pip install --upgrade -r requirements_dev.txt
+    - run: pytest tests

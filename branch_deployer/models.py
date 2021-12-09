@@ -8,7 +8,7 @@ class RepositoryModel:
     def __init__(self, settings_data):
         url_bits = settings_data['url'].split('/')
         if url_bits[2] != 'github.com':
-            raise Exception('We only support  GitHub.com')
+            raise Exception('We only support GitHub.com')
         self.url = settings_data['url']
         self.id = settings_data['id']
         self.clone_url = self.url + ".git"
