@@ -16,7 +16,7 @@ class RepositoryModel:
             os.path.join(settings.REPOS_BASE_PATH, "github",
                          url_bits[3], url_bits[4])
         self.branches = settings_data.get('branches', [])
-        self.all_branches = settings_data.get('all_branches', [])
+        self.all_branches = settings_data.get('all_branches', False)
         self.app_name_format = \
             settings_data.get('app_name_format', '{repo_name}-{branch_name}')
         self.setup_dokku_commands = \
