@@ -26,7 +26,9 @@ def main():
             print("------ REPOSITORY")
             print("id = " + repository.id)
             print("url = " + repository.url)
-            print("Clone URL = " + repository.clone_url)
+            print("Get repository by SSH = " +
+                  ("Yes" if repository.get_repository_by_ssh else "No"))
+            print("Clone URL = " + repository.clone_url())
             print("Local Git Dir = " + repository.local_git_directory)
             print("App Name Format = " + repository.app_name_format)
             print("All branches = " +

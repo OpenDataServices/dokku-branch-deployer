@@ -36,7 +36,8 @@ repositories:
   - id: test-dokku-jekyll                                               
     url: https://github.com/OpenDataServices/test-dokku-jekyll
     app_name_format: {repo_name}-{branch_name}
-    all_branches: false         
+    all_branches: false
+    get_repository_by_ssh: false
     branches:                                                           
         - main
     setup_dokku_commands:
@@ -69,7 +70,7 @@ The following variables can be used:
 
 If set, every branch of this repo will be deployed. 
 
-If not set, only specific branches will deployed and further settings are needed to configure that.
+If not set, only specific branches will be deployed and further settings are needed to configure that.
 
 ### branches
 
@@ -88,3 +89,15 @@ You can do the commands to do so here.
 These can only be dokku commands.
 
 The special token `$APP_NAME` will be replaced with the name of the app for that branch.
+
+### get_repository_by_ssh
+
+This determines how git operations are run against the source repository.
+
+If false, http actions will be used. Use for public repositories only. Works like:
+
+    git clone https://github.com/OpenDataServices/dokku-branch-deployer.git
+
+If true, ssh actions will be used. Use for private repositories, but remember you'll need to add a deploy key. Works like:
+
+    git clone git@github.com:OpenDataServices/dokku-branch-deployer.git

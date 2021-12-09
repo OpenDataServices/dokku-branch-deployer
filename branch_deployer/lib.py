@@ -22,7 +22,7 @@ def update_repo(repository):
     if not os.path.exists(repository.local_git_directory):
         os.makedirs(repository.local_git_directory)
         with pushd(repository.local_git_directory):
-            git.clone(repository.clone_url, '.', mirror=True)
+            git.clone(repository.clone_url(), '.', mirror=True)
     else:
         with pushd(repository.local_git_directory):
             git.remote('update')
