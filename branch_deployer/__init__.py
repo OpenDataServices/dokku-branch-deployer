@@ -1,1 +1,1 @@
-from branch_deployer.web import app
+from branch_deployer.web import app  # noqa

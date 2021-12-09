@@ -25,9 +25,11 @@ dictConfig({
 app = Flask('branch_deployer')
 app.config.from_object(settings)
 
+
 @app.route('/')
 def home():
     return {'app': 'branch_deployer'}
+
 
 @app.route('/hooks/github', methods=['POST'])
 def hooks():
@@ -67,4 +69,3 @@ def handle_push(data):
                     branch_deployer.lib.update_repo(repository)
                     branch_deployer.lib.app_create(repository, branch_name)
                     branch_deployer.lib.push_repo(repository, branch_name)
-

@@ -20,4 +20,3 @@ def test_gitlab_1():
     with pytest.raises(Exception) as error:
         RepositoryModel(settings)
     assert "We only support GitHub.com" == str(error.value)
-

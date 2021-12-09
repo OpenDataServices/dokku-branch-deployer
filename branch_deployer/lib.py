@@ -9,6 +9,7 @@ import shlex
 SSH_CONNECT_STRING = f'{settings.SSH_DOKKU_USER}@{settings.SSH_DOKKU_HOST}'
 dokku = ssh.bake('-tp', settings.SSH_DOKKU_PORT, SSH_CONNECT_STRING, '--')
 
+
 def _run_dokku_command_from_string(cmd):
     bits = shlex.split(cmd)
     first_bit = bits.pop(0)
@@ -27,6 +28,7 @@ def update_repo(repository):
             git.remote('update')
             git.fetch('--prune')
 
+
 def get_all_branches_in_repo(repository):
     branches = []
     with pushd(repository.local_git_directory):
@@ -43,12 +45,11 @@ def app_create(repository, branch_name):
         dokku('apps:create', app_name)
         for cmd in repository.setup_dokku_commands:
             _run_dokku_command_from_string(cmd.replace('$APP_NAME', app_name))
-    except ErrorReturnCode as e:
-        #print(str(e))
+    except ErrorReturnCode:  # as e:
+        # print(str(e))
         # app already exists
         # TODO can we not do better than this?
         pass
-
 
 
 def apps_destroy(repository, branch_name):
@@ -80,7 +81,6 @@ def push_repo(repository, branch_name):
                      f'{branch_name}:refs/heads/master',
                      _err_to_out=True,
                      _out=dlfo)
-
 
 
 def get_branch_name(ref):

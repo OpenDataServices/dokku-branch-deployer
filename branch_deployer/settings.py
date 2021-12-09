@@ -7,7 +7,6 @@ from everett.manager import (
     ConfigEnvFileEnv,
     ConfigManager,
     ConfigOSEnv,
-    ListOf,
 )
 
 config = ConfigManager([
@@ -17,7 +16,8 @@ config = ConfigManager([
     ConfigEnvFileEnv('.env'),
 ])
 
-# SSH settings need to come from env and not a file, because other scripts in bin/ also use them.
+# SSH settings need to come from env and not a file,
+# because other scripts in bin/ also use them.
 SSH_DOKKU_HOST = config('SSH_DOKKU_HOST', raise_error=False)
 SSH_DOKKU_PORT = config('SSH_DOKKU_PORT', parser=int, default='22')
 SSH_DOKKU_USER = config('SSH_DOKKU_USER', default='dokku')
